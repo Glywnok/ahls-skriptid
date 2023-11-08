@@ -1,0 +1,30 @@
+---
+- hosts: webservers
+  tasks:
+    - name: install apache2
+      apt: name=apache2 update_cache=yes state=latest
+
+    - name: Loome public_html kataloog user_ile
+      file:
+       path=/home/delkiv/public_html
+       owner=delkiv
+       group=delkiv
+       mode=0755
+       state=directory
+
+    - name: Lubame userdir mod
+      apache2_module: name=userdir
+
+    - name: Apache2 serverile algalaadimine(restart)
+      service:
+        name: apache2
+        state: restarted
+
+
+    - name: Kopeerime index.html faili USER_ile kodus_public_html kataloogi
+      copy:
+        src: /var/www/html/index.html
+        dest: /home/delkiv/public_html/
+        remote_src: yes
+        owner: delkiv
+        group: delkiv
