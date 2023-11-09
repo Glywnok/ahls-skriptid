@@ -1,4 +1,0 @@
-mysql <<EOF
-SHOW DATABASE;
-SELECT NOW();
-EOF
