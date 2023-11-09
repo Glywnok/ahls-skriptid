@@ -1,0 +1,45 @@
+---
+- hosts: webservers
+  tasks:
+
+  - name: teeme andmebaasi wordpressi 'wpdatabase'
+    mysql_db:
+      name: wpdatabase
+      state: present
+
+  - name: new user 'wpuser'
+    mysql_user:
+      name: wpuser
+      password: qwerty
+      priv: 'database.*:ALL,GRANT'
+      state: present
+      check_implicit_admin: yes
+
+
+  - name: alglaadimine mysql
+    service: name=mysql state=restarted
+
+  - name: install and unpack wordpress
+    unarchive:
+      src: https://wordpress.org/latest.tar.gz
+      dest: /var/www/html/
+      remote_src: yes
+
+  - name: change onwer for www-data
+    file:
+      path: /var/www/html/wordpress
+      state: directory
+      recurse: yes
+      owner: www-data
+
+
+  - name: copy config file
+    command: cp /var/www/html/wordpress/wp-config-sample.php /var/www/html/wordpress/wp-config.php
+
+
+  - name: Vahetame 'DB_PASSWORD' Wordpress config failis
+    lineinfile: dest=/var/www/html/wordpress/wp-config.php regexp="password_here" line="define( 'DB_PASSWORD', 'qwerty' );"
+  - name: Vahetame 'DB_USER' Wordpress config failis
+    lineinfile: dest=/var/www/html/wordpress/wp-config.php regexp="password_here" line="define( 'DB_USER', 'wpuser' );"
+  - name: Vahetame 'DB_NAME' Wordpress config failis
+    lineinfile: dest=/var/www/html/wordpress/wp-config.php regexp="password_here" line="define( 'DB_NAME', 'wpdatabase' );"
