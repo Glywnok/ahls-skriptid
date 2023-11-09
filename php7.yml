@@ -3,7 +3,14 @@
   tasks:
     - name: installeerime php7.3
       apt: name=php7.3 update_cache=yes state=latest
+
     - name: installeerime libapache2-mod-php7.3
       apt: name=libapache2-mod-php7.3 update_cache=yes state=latest
+
     - name: installeerime php7.3-mysql
       apt: name=php7.3-mysql update_cache=yes state=latest
+
+    - name: Loome phpinfo.php faili
+      copy:
+        content: "<?php phpinfo(); ?>"
+        dest: /var/www/html/phpinfo.php
